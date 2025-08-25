@@ -1,0 +1,74 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f5f7fa; /* light background consistent with homepage */
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+  color: #2b6cb0; /* primary brand blue */
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-container form {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-container input {
+  padding: 12px;
+  border: 1px solid #cbd5e0; /* softer border */
+  border-radius: 6px;
+  background-color: #f7fafc;
+  font-size: 0.95rem;
+}
+
+.login-container input:focus {
+  outline: none;
+  border-color: #2b6cb0;
+  box-shadow: 0 0 0 2px rgba(43, 108, 176, 0.2);
+}
+
+.login-container button {
+  padding: 12px;
+  background: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.login-container button:hover {
+  background: #2c5282; /* darker blue on hover */
+}
+
+.redirect-text {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #4a5568;
+}
+
+.redirect-text a {
+  text-decoration: none;
+  color: #38a169; /* green accent for links */
+  font-weight: 500;
+}
+
+.redirect-text a:hover {
+  color: #2f855a;
+}

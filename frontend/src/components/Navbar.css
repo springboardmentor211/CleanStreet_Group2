@@ -1,0 +1,82 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-logo .logo-link {
+  text-decoration: none;
+  color: #2b6cb0;
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  font-size: 15px;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #4a5568;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: #2b6cb0;
+  background-color: #edf2f7;
+}
+
+.navbar-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-buttons .btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary {
+  background: #2b6cb0;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #2c5282;
+}
+
+.btn-outline {
+  background: #ffffff;
+  border: 2px solid #2b6cb0;
+  color: #2b6cb0;
+}
+
+.btn-outline:hover {
+  background: #2b6cb0;
+  color: #ffffff;
+}
