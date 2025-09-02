@@ -1,16 +1,19 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("token"); // check if user is logged in
-
-  if (!token) {
-    // user not logged in, redirect to login
-    return <Navigate to="/login" replace />;
+function PrivateRoute({ children }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+  
+  if (loading) {
+    return <div>Loading...</div>;
   }
-
-  // user logged in, render the protected page
+  
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  }
+  
   return children;
-};
+}
 
 export default PrivateRoute;

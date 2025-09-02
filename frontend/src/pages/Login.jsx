@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/api";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 import "./Login.css";
 
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const location = useLocation();
+  const { updateUser } = useAuth();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,8 +18,17 @@ function Login() {
     e.preventDefault();
     try {
       const res = await api.post("/auth/login", formData);
-      localStorage.setItem("token", res.data.token);
-      navigate("/"); 
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("role", res.data.user.role);
+        
+        // Update user in context
+        updateUser(res.data.user);
+        
+        // Check if there was a previous location the user was trying to access
+        const intendedPath = location.state?.from || "/dashboard";
+        navigate(intendedPath);
+      }
     } catch (err) {
       alert(err.response?.data?.msg || "Error logging in");
     }

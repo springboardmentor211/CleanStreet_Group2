@@ -1,16 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Homepage.css";
 
 const Homepage = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token"); 
-    if (!token) {
-      navigate("/login");
-    }
-  }, [navigate]);
+  // Remove the auto-redirect to login as homepage should be accessible to all users
 
   const handleReportIssue = () => {
     navigate("/report-issue");

@@ -1,109 +1,119 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import "./Register.css";
+import api from "../utils/api";
+import Navbar from "../components/Navbar";   // ✅ Import Navbar
+import "../styles/theme.css";
 
 function Register() {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    username: "",
     email: "",
-    phone: "",
     password: "",
+    location: "",
+    role: "user"
   });
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setProfilePhoto(file);
+    } else {
+      alert('Please select an image file');
+      e.target.value = null;
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
     try {
-      const response = await fetch("http://localhost:5000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      const submitData = new FormData();
+      Object.keys(formData).forEach(key => {
+        submitData.append(key, formData[key]);
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(data.msg); 
-        navigate("/login"); 
-      } else {
-        alert(data.msg); 
+      if (profilePhoto) {
+        submitData.append('profilePhoto', profilePhoto);
       }
+
+      await api.post("/auth/register", submitData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      alert("Registration successful! Please login.");
+      navigate("/login");
     } catch (err) {
-      console.error(err);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+      alert(err.response?.data?.msg || "Error registering");
     }
   };
 
   return (
     <div>
-      <Navbar />
-      <div className="register-container">
-        <form className="register-form" onSubmit={handleSubmit}>
-          <h2>Register for CleanStreet</h2>
-
+      <Navbar />   {/* ✅ Navbar added here */}
+      <div className="page-container">
+        <form className="card" onSubmit={handleSubmit}>
+          <h2>Register</h2>
           <input
-            type="text"
             name="name"
+            type="text"
             placeholder="Full Name"
-            value={formData.name}
             onChange={handleChange}
             required
+            className="input-field"
           />
-
           <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="email"
             name="email"
+            type="email"
             placeholder="Email"
-            value={formData.email}
             onChange={handleChange}
             required
+            className="input-field"
           />
-
           <input
-            type="text"
-            name="phone"
-            placeholder="Phone Number (Optional)"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-
-          <input
-            type="password"
             name="password"
+            type="password"
             placeholder="Password"
-            value={formData.password}
             onChange={handleChange}
             required
+            className="input-field"
           />
-
-          <button type="submit" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
-          </button>
-
+          <input
+            name="location"
+            type="text"
+            placeholder="Location"
+            onChange={handleChange}
+            className="input-field"
+          />
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="input-field"
+          >
+            <option value="user">User</option>
+            <option value="volunteer">Volunteer</option>
+            <option value="admin">Admin</option>
+          </select>
+          <div className="file-input-container">
+            <label htmlFor="profilePhoto" className="file-input-label">
+              Profile Photo
+            </label>
+            <input
+              id="profilePhoto"
+              name="profilePhoto"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="input-field"
+            />
+          </div>
+          <button type="submit" className="btn-primary">Register</button>
           <p className="redirect-text">
-            Already have an account?{" "}
-            <Link to="/login">Login</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </p>
         </form>
       </div>

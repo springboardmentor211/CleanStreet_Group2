@@ -1,0 +1,254 @@
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import api from "../utils/api";
+import "./Profile.css";
+
+function ProfileEdit() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [form, setForm] = useState({
+    name: "",
+    username: "",
+    email: "",
+    phone: "",
+    address: "",
+    bio: "",
+    profilePicture: "",
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [joinDate] = useState(new Date().toLocaleDateString());
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await api.get("/api/users/me");
+        setForm(res.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        setError("Failed to load profile. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.put("/api/users/me", form);
+      navigate("/profile");
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      setError("Failed to update profile. Please try again.");
+    }
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("profilePicture", file);
+        const response = await api.post("/api/users/upload-profile-picture", formData);
+        setForm({ ...form, profilePicture: response.data.url });
+      } catch (err) {
+        console.error("Error uploading profile picture:", err);
+        setError("Failed to upload profile picture. Please try again.");
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+        <div className="profile-container">
+          <div className="profile-wrapper">
+            <div className="loading">Loading...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Navbar />
+      <div className="profile-container">
+        <div className="profile-wrapper">
+          <div className="profile-content">
+            {error && <div className="error-message">{error}</div>}
+
+            <div className="profile-sidebar">
+              <div className="profile-picture-container">
+                {form.profilePicture ? (
+                  <img src={form.profilePicture} alt="Profile" className="profile-picture" />
+                ) : (
+                  <div className="profile-picture">
+                    {form.name ? form.name.charAt(0).toUpperCase() : "U"}
+                  </div>
+                )}
+                <div 
+                  className="profile-picture-edit"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                    <path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h4.05l1.83-2h4.24l1.83 2H20v12z"/>
+                  </svg>
+                </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                />
+              </div>
+              <div className="profile-info">
+                <h3>{form.name}</h3>
+                <p className="profile-username">@{form.username}</p>
+                <p className="profile-bio">{form.bio || "No bio added yet"}</p>
+                <span className="profile-role">Citizen</span>
+                <p className="member-since">Member since {joinDate}</p>
+              </div>
+            </div>
+
+            <div className="profile-details-section">
+              <h2>Account Information</h2>
+              {!isEditing ? (
+                <div>
+                  <div className="detail-item">
+                    <span className="detail-label">Name:</span>
+                    <span className="detail-value">{form.name}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Username:</span>
+                    <span className="detail-value">@{form.username}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Bio:</span>
+                    <span className="detail-value">{form.bio || "No bio added yet"}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Email:</span>
+                    <span className="detail-value">{form.email}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Phone:</span>
+                    <span className="detail-value">{form.phone || "Not provided"}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Address:</span>
+                    <span className="detail-value">{form.address || "Not provided"}</span>
+                  </div>
+                  <button 
+                    className="edit-button" 
+                    onClick={() => setIsEditing(true)}
+                    style={{ marginTop: '20px' }}
+                  >
+                    Edit Information
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="edit-form">
+                  <div className="form-group">
+                    <label htmlFor="name">Full Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="username">Username</label>
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      value={form.username}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="bio">Bio</label>
+                    <textarea
+                      id="bio"
+                      name="bio"
+                      value={form.bio || ""}
+                      onChange={handleChange}
+                      placeholder="Tell us about yourself"
+                      rows="3"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="email">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="phone">Phone Number</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={form.phone || ""}
+                      onChange={handleChange}
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="address">Address</label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      value={form.address || ""}
+                      onChange={handleChange}
+                      placeholder="Enter your address"
+                      rows="3"
+                    />
+                  </div>
+
+                  <div className="button-group">
+                    <button type="button" className="btn-secondary" onClick={() => setIsEditing(false)}>
+                      Cancel
+                    </button>
+                    <button type="submit" className="btn-primary">
+                      Save Changes
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ProfileEdit;

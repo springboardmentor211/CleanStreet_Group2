@@ -18,31 +18,36 @@
   .navbar-brand a {
     color: #2b6cb0;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 1.6rem;
+    font-weight: 700;
+    font-size: 30px;
   }
   .navbar-middle {
     display: flex;
-    gap: 1.5rem;
+    gap: 24px;
   }
   .navbar-middle a {
-    color: #2d3748;
+    color: #4a5568;
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   .navbar-middle a:hover {
     color: #2b6cb0;
+    background-color: #edf2f7;
   }
   .navbar-right {
     display: flex;
     gap: 1rem;
   }
   .btn-login, .btn-register {
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
     text-decoration: none;
-    font-weight: 500;
     transition: all 0.3s ease;
   }
   .btn-login {
