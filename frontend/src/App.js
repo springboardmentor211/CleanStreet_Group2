@@ -9,6 +9,9 @@ import ReportIssue from "./pages/ReportIssue.jsx";
 import ViewComplaints from "./pages/ViewComplaints.jsx";
 import PrivateRoute from "./components/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
+import ForgotPassword from "./pages/ForgotPasswprd.jsx";
+
+
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
+
 
           {/* Protected routes */}
           <Route

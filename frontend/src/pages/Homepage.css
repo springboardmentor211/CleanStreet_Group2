@@ -16,7 +16,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
   .navbar-brand a {
-    color: #2b6cb0;
+    color: #15803d;
     text-decoration: none;
     font-weight: 700;
     font-size: 30px;
@@ -51,16 +51,16 @@
     transition: all 0.3s ease;
   }
   .btn-login {
-    background-color: transparent;
-    border: 2px solid #2b6cb0;
-    color: #2b6cb0;
+    background-color: #9ae6b4 ;
+    border: 2px solid  #38a169 ;
+    color: #16a34a;
   }
   .btn-login:hover {
-    background-color: #2b6cb0;
+    background-color: #16a34a;
     color: #ffffff;
   }
   .btn-register {
-    background-color: #38a169;
+    background-color: #9ae6b4;
     border: 2px solid #38a169;
     color: #ffffff;
   }
@@ -117,7 +117,7 @@
   .how-it-works h2 {
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: #2b6cb0;
+    color: #4a5568;
   }
   .features {
     display: flex;
