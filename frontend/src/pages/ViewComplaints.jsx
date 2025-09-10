@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
@@ -10,6 +12,7 @@ function ViewComplaints() {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
+        // fetch user-specific complaints
         const res = await api.get('/api/complaints/my');
         setComplaints(res.data);
       } catch (err) {
@@ -26,11 +29,11 @@ function ViewComplaints() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'resolved':
-        return '#38A169';
+        return '#38A169'; // green
       case 'in_progress':
-        return '#D69E2E';
+        return '#D69E2E'; // yellow
       default:
-        return '#E53E3E';
+        return '#E53E3E'; // red
     }
   };
 
@@ -60,13 +63,31 @@ function ViewComplaints() {
             <div className="complaints-grid">
               {complaints.map((complaint) => (
                 <div key={complaint._id} className="complaint-card">
+                  {/* Status bar */}
                   <div 
                     className="status-indicator" 
                     style={{ backgroundColor: getStatusColor(complaint.status) }}
                   />
+
+                  {/* Complaint Images */}
+                  {complaint.images && complaint.images.length > 0 && (
+                    <div className="complaint-images">
+                      {complaint.images.map((img, idx) => (
+                        <img
+                          key={idx}
+                          src={`http://localhost:5000/uploads/${img}`}
+                          alt={`complaint-${idx}`}
+                          className="complaint-image"
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Complaint Info */}
                   <h3>{complaint.title}</h3>
                   <p className="location">{complaint.location}</p>
                   <p className="description">{complaint.description}</p>
+
                   <div className="complaint-footer">
                     <span className="status">Status: {complaint.status}</span>
                     <span className="date">

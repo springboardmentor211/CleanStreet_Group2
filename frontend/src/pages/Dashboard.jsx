@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
@@ -17,17 +18,23 @@ function Dashboard() {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const res = await api.get("/complaints/my");
+        const res = await api.get("/api/complaints/my");
         setComplaints(res.data);
 
         const total = res.data.length;
-        const pending = res.data.filter(c => c.status === "received").length;
-        const inProgress = res.data.filter(c => c.status === "in_review").length;
-        const resolved = res.data.filter(c => c.status === "resolved").length;
+        const pending = res.data.filter(
+          (c) => c.status === "pending" || c.status === "received"
+        ).length;
+        const inProgress = res.data.filter(
+          (c) => c.status === "in_progress"
+        ).length;
+        const resolved = res.data.filter(
+          (c) => c.status === "resolved"
+        ).length;
 
         setStats({ total, pending, inProgress, resolved });
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching complaints:", err.response?.data || err.message);
       }
     };
     fetchComplaints();

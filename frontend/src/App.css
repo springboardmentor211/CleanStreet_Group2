@@ -1,4 +1,22 @@
-body {
+
+@import url("https://unpkg.com/leaflet/dist/leaflet.css");
+
+.leaflet-container {
+  /* ensure map area is visible */
+  height: 360px;
+  width: 100%;
+}
+
+/* small helper so suggestions are always clickable */
+.searchable-map-dropdown {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+/* body {
   font-family: Arial, sans-serif;
   background-color: #f4f6f8;
   margin: 0;
@@ -6,10 +24,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full screen height */
-}
+  height: 100vh; 
+} */
 
-form {
+/* form {
   width: 100%;
   max-width: 400px;
   background: white;
@@ -17,11 +35,12 @@ form {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   display: flex;
-  flex-direction: column; /* Stack inputs vertically */
-  gap: 12px; /* Space between inputs */
-}
+  flex-direction: column;
+  
+  gap: 12px; 
 
-input {
+} */
+/* input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -38,4 +57,4 @@ button {
 
 button:hover {
   background: #0056b3;
-}
+} */

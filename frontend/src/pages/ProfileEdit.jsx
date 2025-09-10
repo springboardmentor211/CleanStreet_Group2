@@ -39,7 +39,7 @@ function Profile() {
     try {
       const formData = new FormData();
       formData.append("profilePicture", file);
-      const res = await api.post("/api/users/upload-profile-picture", formData);
+      const res = await api.post("/api/users/uploads-profile-picture", formData);
       updateUser({ ...user, profilePicture: res.data.url });
       setPreviewPic(null);
       setError(null);

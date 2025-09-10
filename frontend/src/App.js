@@ -10,7 +10,8 @@ import ViewComplaints from "./pages/ViewComplaints.jsx";
 import PrivateRoute from "./components/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
 import ForgotPassword from "./pages/ForgotPasswprd.jsx";
-
+import "./App.css";
+import 'leaflet/dist/leaflet.css';
 
 
 function App() {
