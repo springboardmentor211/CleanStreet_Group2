@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -27,10 +26,9 @@ function ReportIssue() {
     address: '',
     landmark: '',
     description: '',
-    location: ''
+    location: { address: '', lat: '', lng: '' }
   });
 
-  // Store images with preview
   const [images, setImages] = useState([]);
 
   const handleChange = (e) => {
@@ -57,23 +55,44 @@ function ReportIssue() {
     e.preventDefault();
     try {
       const formDataWithFiles = new FormData();
-      Object.keys(formData).forEach(key => {
-        formDataWithFiles.append(key, formData[key]);
-      });
-      images.forEach(imgObj => {
-        formDataWithFiles.append('images', imgObj.file);
-      });
 
-      await api.post('/api/complaints', formDataWithFiles, {
-  headers: {
-    'Content-Type': 'multipart/form-data'
+      // Append all normal fields
+      Object.keys(formData).forEach(key => {
+  if (key === "location") {
+    formDataWithFiles.append("lat", String(formData.location.lat || ""));
+    formDataWithFiles.append("lng", String(formData.location.lng || ""));
+
+    // ✅ Merge manual + map address into one string
+    const combinedAddress = [
+      formData.address,
+      formData.location.address
+    ].filter(Boolean).join(" - ");
+
+    formDataWithFiles.append("address", combinedAddress);
+  } else if (key !== "address") { // ✅ skip manual address separately
+    formDataWithFiles.append(key, formData[key]);
   }
 });
 
 
+      // Append images
+      images.forEach(imgObj => {
+        formDataWithFiles.append('images', imgObj.file);
+      });
+
+      // ✅ Debugging: log what’s being sent
+      for (let [key, value] of formDataWithFiles.entries()) {
+        console.log(key, value);
+      }
+
+      await api.post('/api/complaints', formDataWithFiles, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
       alert('Issue reported successfully!');
       navigate('/view-complaints');
     } catch (err) {
+      console.error("Submit error:", err.response?.data || err.message);
       alert(err.response?.data?.msg || 'Error reporting issue');
     }
   };
@@ -86,7 +105,7 @@ function ReportIssue() {
           <h2>Report a Civic Issue</h2>
           <form onSubmit={handleSubmit} className="report-form">
 
-            {/* Issue Title */}
+            {/* Title */}
             <div className="form-group">
               <label htmlFor="title">Issue Title</label>
               <input
@@ -119,7 +138,7 @@ function ReportIssue() {
               </select>
             </div>
 
-            {/* Priority Level */}
+            {/* Priority */}
             <div className="form-group">
               <label htmlFor="priority">Priority Level</label>
               <select
@@ -134,7 +153,7 @@ function ReportIssue() {
               </select>
             </div>
 
-            {/* Address */}
+            {/* Address (manual) */}
             <div className="form-group">
               <label htmlFor="address">Address</label>
               <input
@@ -147,19 +166,6 @@ function ReportIssue() {
                 required
               />
             </div>
-
-            {/* Nearby Landmark
-            <div className="form-group">
-              <label htmlFor="landmark">Nearby Landmark (Optional)</label>
-              <input
-                type="text"
-                id="landmark"
-                name="landmark"
-                value={formData.landmark}
-                onChange={handleChange}
-                placeholder="e.g. Near City Hall"
-              />
-            </div> */}
 
             {/* Description */}
             <div className="form-group">
@@ -174,21 +180,22 @@ function ReportIssue() {
               />
             </div>
 
-            {/* Location on Map */}
+            {/* Location (map) */}
             <div className="form-group">
               <label htmlFor="location">Location on Map</label>
               <input
                 type="text"
                 id="location"
                 name="location"
-                value={formData.location}
+                value={formData.location.address}
                 readOnly
                 placeholder="Selected area will appear here"
                 required
               />
               <SearchableMap
-                location={formData.location}
-                setLocation={(loc) => setFormData({ ...formData, location: loc })}
+                setLocation={(loc) =>
+                  setFormData({ ...formData, location: loc })
+                }
               />
             </div>
 
@@ -204,16 +211,10 @@ function ReportIssue() {
                 accept="image/*"
                 capture="environment"
               />
-
-              {/* Image Previews */}
               <div className="image-preview-container">
                 {images.map((img, index) => (
                   <div key={index} className="image-preview-wrapper">
-                    <img
-                      src={img.preview}
-                      alt={`preview-${index}`}
-                      className="preview-image"
-                    />
+                    <img src={img.preview} alt={`preview-${index}`} className="preview-image" />
                     <button
                       type="button"
                       className="remove-image"
@@ -226,7 +227,31 @@ function ReportIssue() {
               </div>
             </div>
 
-            <button type="submit" className="submit-button">Submit Report</button>
+           <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
+  
+  <button
+    type="button"
+    className="clear-button"
+    onClick={() => {
+      setFormData({
+        title: "",
+        issueType: "",
+        priority: "low",
+        address: "",
+        landmark: "",
+        description: "",
+        location: { address: "", lat: "", lng: "" },
+      });
+      setImages([]);
+    }}
+  >
+    Clear Form
+  </button>
+  <button type="submit" className="submit-button">
+    Submit Report
+  </button>
+</div>
+
           </form>
         </div>
       </div>

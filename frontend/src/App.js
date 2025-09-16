@@ -12,8 +12,8 @@ import { AuthProvider } from "./context/AuthContext";
 import ForgotPassword from "./pages/ForgotPasswprd.jsx";
 import "./App.css";
 import 'leaflet/dist/leaflet.css';
-
-
+import IssueMap from "./pages/IssuseMap.jsx";
+import ComplaintDetails from "./pages/ComplaintDetails.jsx";
 function App() {
   return (
     <AuthProvider>
@@ -60,7 +60,8 @@ function App() {
               </PrivateRoute>
             }
           />
-
+            <Route path="/complaints/:id" element={<ComplaintDetails />} />
+            <Route path="/issue-map" element={<IssueMap />} />
           {/* Catch-all → send to homepage */}
           <Route path="*" element={<Homepage />} />
         </Routes>

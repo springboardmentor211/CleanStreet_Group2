@@ -183,3 +183,24 @@ input[type="file"]:hover {
 .suggestion-item:hover {
   background-color: #f0f0f0;
 }
+.clear-button {
+  background-color: #4299e1;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 16px;
+}
+
+.clear-button:hover {
+  background-color: #3182ce;
+  transform: translateY(-1px);
+}
+
+.clear-button:active {
+  transform: translateY(0);
+}

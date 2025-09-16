@@ -1,0 +1,122 @@
+/* .complaint-details-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.details-meta p {
+  margin: 0.3rem 0;
+}
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin: 1rem 0;
+}
+
+.complaint-photo {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.actions-bar {
+  margin: 1rem 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.comments-section {
+  margin-top: 1.5rem;
+}
+
+.comment-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+} */
+.complaint-details {
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  padding: 15px;
+}
+
+.back-btn {
+  background: #f0f0f0;
+  border: none;
+  padding: 8px 12px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.complaint-card {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.complaint-card h2 {
+  margin-top: 0;
+  color: #2a6f97;
+}
+
+.complaint-image {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.comments-section {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.comment {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+
+.comment strong {
+  color: #2a6f97;
+}
+
+.comment-date {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 4px;
+}
+
+.comment-input {
+  display: flex;
+  margin-top: 10px;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px 0 0 6px;
+  outline: none;
+}
+
+.comment-input button {
+  background: #2a6f97;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+}

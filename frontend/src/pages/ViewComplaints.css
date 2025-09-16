@@ -1,133 +1,93 @@
 .view-complaints-page {
-  min-height: calc(100vh - 64px);
-  background: #f7fafc;
-  padding: 40px 20px;
-}
-
-.complaints-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 20px;
 }
 
-.complaints-container h2 {
-  color: #2d3748;
-  margin-bottom: 30px;
-  font-size: 1.875rem;
-  font-weight: 700;
+.page-header {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .complaints-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  padding: 20px 0;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
 }
 
 .complaint-card {
-  background: white;
+  background: #fff;
   border-radius: 12px;
-  padding: 24px;
-  position: relative;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .complaint-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.status-indicator {
-  position: absolute;
-  top: 0;
-  right: 24px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-top: 24px;
-}
-
-.complaint-card h3 {
-  color: #2d3748;
-  font-size: 1.25rem;
-  margin-bottom: 12px;
-  padding-right: 20px;
-}
-
-.complaint-card .location {
-  color: #4a5568;
-  font-size: 0.95rem;
-  margin-bottom: 12px;
-}
-
-.complaint-card .description {
-  color: #718096;
-  font-size: 0.95rem;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-.complaint-footer {
+.complaint-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #e2e8f0;
+  margin-bottom: 8px;
 }
 
-.complaint-footer .status {
-  color: #4a5568;
-  font-weight: 600;
-  font-size: 0.9rem;
+.status-badge {
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
 }
 
-.complaint-footer .date {
-  color: #718096;
-  font-size: 0.9rem;
-}
-
-.no-complaints {
-  text-align: center;
-  padding: 40px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.no-complaints p {
-  color: #4a5568;
-  font-size: 1.1rem;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #4a5568;
-  font-size: 1.1rem;
-}
-
-@media (max-width: 640px) {
-  .complaints-container h2 {
-    font-size: 1.5rem;
-  }
-  
-  .complaints-grid {
-    grid-template-columns: 1fr;
-  }
-}
-.complaint-images {
+.complaint-meta {
+  font-size: 0.85rem;
+  color: #666;
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  justify-content: space-between;
   margin-bottom: 10px;
 }
 
-.complaint-image {
-  width: 100%;
-  max-width: 180px;
-  height: 140px;
+.complaint-description {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.complaint-images-preview {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.complaint-thumb {
+  width: 70px;
+  height: 70px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.more-images {
+  font-size: 0.85rem;
+  color: #777;
+  align-self: center;
+}
+.delete-button {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c53030;
 }

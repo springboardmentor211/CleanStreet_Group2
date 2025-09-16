@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["user", "volunteer", "admin"], default: "user" },
-    profilePicture: { type: String ,default: "" },
+    profilePicture: { type: String ,default: null },
     // username: { type: String, required: true, unique: true },
      username: { type: String,  unique: true },
     phone: { type: String },

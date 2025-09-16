@@ -1,42 +1,96 @@
+
 const express = require("express");
-const { register, login } = require("../controllers/authController");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const User = require("../models/User");
+const auth = require("../Middlewares/auth"); // ✅ Added
 
 const router = express.Router();
 
+// -------------------- REGISTER --------------------
+router.post("/register", async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
 
-const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
-const User = require("../models/User");
+    let user = await User.findOne({ email });
+    if (user) return res.status(400).json({ msg: "User already exists" });
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
+    user = new User({ name, email, password: hashedPassword, role });
+    await user.save();
 
-router.post("/register", register);
-router.post("/login", login);
+    const token = jwt.sign(
+      { id: user._id, role: user.role, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
+    const safeUser = await User.findById(user._id).select("-password -__v");
 
+    res.json({ token, user: safeUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
 
-/**
- * POST /auth/send-otp
- * Send OTP to user's email
- */
+// -------------------- LOGIN --------------------
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    const safeUser = await User.findById(user._id).select("-password -__v");
+
+    res.json({ token, user: safeUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// -------------------- NEW: GET LOGGED-IN USER --------------------
+router.get("/me", auth(), async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password -__v");
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    res.json(user);
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+// -------------------- OTP Routes --------------------
 router.post("/send-otp", async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ msg: "User not found" });
 
-    // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Save OTP in DB (expires in 5 mins)
     user.otp = otp;
     user.otpExpires = Date.now() + 5 * 60 * 1000;
     user.otpVerified = false;
     await user.save();
 
-    // Send email with Nodemailer
     const transporter = nodemailer.createTransport({
-      service: "gmail", 
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -57,10 +111,6 @@ router.post("/send-otp", async (req, res) => {
   }
 });
 
-/**
- * POST /auth/verify-otp
- * Verify user's OTP
- */
 router.post("/verify-otp", async (req, res) => {
   const { email, otp } = req.body;
   try {
@@ -79,10 +129,6 @@ router.post("/verify-otp", async (req, res) => {
   }
 });
 
-/**
- * POST /auth/reset-password
- * Reset password if OTP verified
- */
 router.post("/reset-password", async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -91,11 +137,9 @@ router.post("/reset-password", async (req, res) => {
       return res.status(400).json({ msg: "OTP not verified" });
     }
 
-    // Hash new password
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
-    // Clear OTP fields
     user.otp = undefined;
     user.otpExpires = undefined;
     user.otpVerified = false;
@@ -107,6 +151,5 @@ router.post("/reset-password", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
-
 
 module.exports = router;
