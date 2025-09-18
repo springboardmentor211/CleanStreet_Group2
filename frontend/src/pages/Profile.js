@@ -12,6 +12,7 @@ function Profile() {
     phone: '',
     address: '',
     joinedDate: '',
+    profilePicture: '',  
     complaints: {
       total: 0,
       resolved: 0,
@@ -22,7 +23,8 @@ function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await api.get('/users/profile');
+        // const response = await api.get('/users/profile');
+        const response = await api.get('/users/me'); 
         setUser(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -55,8 +57,9 @@ function Profile() {
         <div className="profile-wrapper">
           <div className="profile-header">
             <div className="profile-avatar">
-              {user.avatar ? (
-                <img src={user.avatar} alt={user.name} />
+              {user.profilePicture  ? (
+                // <img src={user.avatar} alt={user.name} />
+                <img src={user.profilePicture} alt={user.name} />
               ) : (
                 getInitials(user.name || 'User Name')
               )}

@@ -16,17 +16,19 @@ export const AuthProvider = ({ children }) => {
     if (newData) {
       // Ensure we're not storing undefined values
       const cleanedData = {
-        _id: newData._id,
-        name: newData.name || '',
-        username: newData.username || '',
-        email: newData.email || '',
-        phone: newData.phone || '',
-        address: newData.address || '',
-        bio: newData.bio || '',
-        profilePicture: newData.profilePicture || null,
-        role: newData.role || 'user',
-        createdAt: newData.createdAt,
-        updatedAt: newData.updatedAt
+        // _id: newData._id,
+        // name: newData.name || '',
+        // username: newData.username || '',
+        // email: newData.email || '',
+        // phone: newData.phone || '',
+        // address: newData.address || '',
+        // bio: newData.bio || '',
+        // profilePicture: newData.profilePicture || null,
+        // role: newData.role || 'user',
+        // createdAt: newData.createdAt,
+        // updatedAt: newData.updatedAt
+         ...newData, // spread everything (bio, username, profilePicture, etc.)
+        _id: newData._id || newData.id, // normalize _id/id field
       };
       
       console.log('AuthContext: Cleaned user data:', cleanedData);
@@ -56,7 +58,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      const res = await api.get('/api/users/me');
+      const res = await api.get('/users/me');
       updateUser(res.data);
     } catch (err) {
       console.error('Error fetching user:', err);

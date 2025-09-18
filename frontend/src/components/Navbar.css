@@ -14,7 +14,7 @@
 .logo {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #2b6cb0;
+  color: #36b02b;
   text-decoration: none;
 }
 
@@ -54,7 +54,7 @@
 
 .navbar-logo .logo-link {
   text-decoration: none;
-  color: #2b6cb0;
+  color: #15803d;
   font-weight: 700;
   font-size: 30px;
   cursor: pointer;
@@ -62,7 +62,7 @@
 }
 
 .navbar-logo .logo-link:hover {
-  color: #2c5282;
+  color: #3c822c;
 }
 
 .navbar-links {
@@ -109,22 +109,22 @@
 }
 
 .btn-primary {
-  background: #2b6cb0;
+  background: #16a34a;
   color: #ffffff;
   border: none;
 }
 
 .btn-primary:hover {
-  background: #2c5282;
+  background: #4fc724;
 }
 
 .btn-outline {
   background: #ffffff;
-  border: 2px solid #2b6cb0;
-  color: #2b6cb0;
+  border: 2px solid #9ae6b4;
+  color: #15803d;
 }
 
 .btn-outline:hover {
-  background: #2b6cb0;
+  background: #15803d;
   color: #ffffff;
 }

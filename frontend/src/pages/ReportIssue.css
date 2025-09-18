@@ -109,3 +109,98 @@ input[type="file"]:hover {
     font-size: 1.5rem;
   }
 }
+.report-container .leaflet-container {
+  margin-top: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  height: 300px !important;
+  width: 100% !important;
+}
+/* Highlight issue type dropdown */
+#issueType {
+  background-color: #f9fafb;
+  font-weight: 500;
+}
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.remove-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+}
+.search-box {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.suggestions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+}
+
+.suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+.clear-button {
+  background-color: #4299e1;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 16px;
+}
+
+.clear-button:hover {
+  background-color: #3182ce;
+  transform: translateY(-1px);
+}
+
+.clear-button:active {
+  transform: translateY(0);
+}
