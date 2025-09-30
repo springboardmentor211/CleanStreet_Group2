@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const Complaint = require("../models/Complaint");
 const auth = require("../Middlewares/auth");
-
+const Notification = require("../models/Notification");
 const router = express.Router();
 
 // ----------------- File Upload Setup -----------------
@@ -21,7 +21,7 @@ const upload = multer({ storage });
 
 // ----------------- ROUTES -----------------
 
-// POST: Create a new complaint
+// Create a new complaint
 router.post("/", auth(), upload.array("images"), async (req, res) => {
   try {
     const { lat, lng, ...otherFields } = req.body;
@@ -31,7 +31,7 @@ router.post("/", auth(), upload.array("images"), async (req, res) => {
       ...otherFields,
       location: {
         type: "Point",
-        coordinates: [parseFloat(lng), parseFloat(lat)], // [lng, lat]
+        coordinates: [parseFloat(lng), parseFloat(lat)], 
       },
       images: req.files.map((file) => file.filename),
     });
@@ -44,7 +44,7 @@ router.post("/", auth(), upload.array("images"), async (req, res) => {
   }
 });
 
-// GET: Complaints created by logged-in user
+//  Complaints created by logged-in user
 router.get("/my", auth(), async (req, res) => {
   try {
     const complaints = await Complaint.find({ user_id: req.user.id }).sort({
@@ -57,7 +57,7 @@ router.get("/my", auth(), async (req, res) => {
   }
 });
 
-//  GET: All complaints
+//  All complaints
 router.get("/", async (req, res) => {
   try {
     const complaints = await Complaint.find().sort({ createdAt: -1 });
@@ -68,10 +68,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-//  GET: Complaint by ID
+// Complaint by ID
 router.get("/:id", async (req, res) => {
   try {
-    const complaint = await Complaint.findById(req.params.id);
+    const complaint = await Complaint.findById(req.params.id)
+      .populate("user_id", "name email")
+      .populate("assigned_to", "name email");
+
     if (!complaint) {
       return res.status(404).json({ msg: "Complaint not found" });
     }
@@ -82,7 +85,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// DELETE: Only owner can delete
+// Only owner can delete
 router.delete("/:id", auth(), async (req, res) => {
   try {
     const complaint = await Complaint.findById(req.params.id);
@@ -94,7 +97,6 @@ router.delete("/:id", auth(), async (req, res) => {
       return res.status(403).json({ msg: "Not authorized to delete this complaint" });
     }
 
-    // Remove images from uploads folder
     if (complaint.images && complaint.images.length > 0) {
       complaint.images.forEach((file) => {
         const filePath = path.join(uploadDir, file);
@@ -105,7 +107,6 @@ router.delete("/:id", auth(), async (req, res) => {
     }
 
     await complaint.deleteOne();
-
     res.json({ success: true, msg: "Complaint deleted successfully" });
   } catch (err) {
     console.error("Error deleting complaint:", err);
@@ -113,107 +114,144 @@ router.delete("/:id", auth(), async (req, res) => {
   }
 });
 
-  // POST: Add comment
-router.post("/:id/comment", auth(), async (req, res) => {
+//  Add comment
+ router.post("/:id/comment", auth(), async (req, res) => {
+   try {
+     const complaint = await Complaint.findById(req.params.id);
+     if (!complaint) {
+       return res.status(404).json({ msg: "Complaint not found" });
+     }
+
+     const comment = {
+       text: req.body.text,
+       author: req.user.name,
+       user_id: req.user.id,
+       createdAt: new Date(),
+       upvotes: 0,
+       downvotes: 0,
+       upvotedBy: [],
+       downvotedBy: [],
+     };
+
+     complaint.comments.push(comment);
+     await complaint.save();
+
+     res.json(complaint.comments[complaint.comments.length - 1]);
+   } catch (err) {
+     console.error("Error adding comment:", err);
+     res.status(500).json({ msg: "Error adding comment" });
+   }
+ });
+
+//  Vote complaint
+ router.post("/:id/vote", auth(), async (req, res) => {
+   try {
+     const { voteType } = req.body;
+     const userId = req.user.id;
+
+     const complaint = await Complaint.findById(req.params.id);
+     if (!complaint) {
+       return res.status(404).json({ msg: "Complaint not found" });
+     }
+
+      
+     complaint.upvotedBy = complaint.upvotedBy.filter((id) => id.toString() !== userId);
+     complaint.downvotedBy = complaint.downvotedBy.filter((id) => id.toString() !== userId);
+
+     if (voteType === "upvote") complaint.upvotedBy.push(userId);
+     if (voteType === "downvote") complaint.downvotedBy.push(userId);
+
+     complaint.upvotes = complaint.upvotedBy.length;
+     complaint.downvotes = complaint.downvotedBy.length;
+
+     await complaint.save();
+
+     res.json({
+       upvotes: complaint.upvotes,
+       downvotes: complaint.downvotes,
+       userVote: voteType,
+     });
+   } catch (err) {
+     console.error("Error voting:", err);
+     res.status(500).json({ msg: "Error voting" });
+   }
+ });
+
+// Admin assigns complaint to a volunteer
+router.put("/:id/assign", auth(["admin"]), async (req, res) => {
   try {
-    const complaint = await Complaint.findById(req.params.id);
-    if (!complaint) {
-      return res.status(404).json({ msg: "Complaint not found" });
-    }
-
-    const comment = {
-      text: req.body.text,
-      author: req.user.name,
-      user_id: req.user.id,
-      createdAt: new Date(),
-      upvotes: 0,
-      downvotes: 0,
-      upvotedBy: [],
-      downvotedBy: [],
-    };
-
-    complaint.comments.push(comment);
-    await complaint.save();
-
-    res.json(complaint.comments[complaint.comments.length - 1]);
+    const { volunteerId } = req.body;
+    const complaint = await Complaint.findByIdAndUpdate(
+      req.params.id,
+      { assigned_to: volunteerId, status: "assigned" },
+      { new: true }
+    )
+      .populate("user_id", "name email")
+      .populate("assigned_to", "name email");
+    res.json(complaint);
   } catch (err) {
-    console.error("Error adding comment:", err);
-    res.status(500).json({ msg: "Error adding comment" });
+    console.error("Error assigning complaint:", err);
+    res.status(500).json({ error: "Failed to assign complaint" });
   }
 });
 
-//  POST: Vote complaint
-router.post("/:id/vote", auth(), async (req, res) => {
+// Volunteer marks complaint as in_review
+router.put("/:id/review", auth(["volunteer"]), async (req, res) => {
   try {
-    const { voteType } = req.body;
-    const userId = req.user.id;
-
+    const { reviewNotes } = req.body;
     const complaint = await Complaint.findById(req.params.id);
-    if (!complaint) {
-      return res.status(404).json({ msg: "Complaint not found" });
+    if (!complaint || !complaint.assigned_to || complaint.assigned_to.toString() !== req.user.id) {
+      return res.status(403).json({ msg: "Not authorized to review this complaint" });
+    }
+    complaint.status = "in_review";
+    complaint.reviewNotes = reviewNotes;
+    await complaint.save();
+    
+    const updatedComplaint = await Complaint.findById(req.params.id)
+      .populate("user_id", "name email")
+      .populate("assigned_to", "name email");
+
+    res.json(updatedComplaint);
+  } catch (err)
+ {
+    console.error("Error reviewing complaint:", err);
+    res.status(500).json({ error: "Failed to update review" });
+  }
+});
+
+
+
+// Volunteer marks complaint as resolved
+router.put("/:id/resolve", auth(["volunteer"]), async (req, res) => {
+  try {
+    const { notes } = req.body; 
+    
+    const complaint = await Complaint.findById(req.params.id).populate('assigned_to', 'name');
+
+    if (!complaint || !complaint.assigned_to || complaint.assigned_to._id.toString() !== req.user.id) {
+        return res.status(403).json({ msg: "Not authorized to resolve this complaint" });
     }
 
-    // Remove previous vote
-    complaint.upvotedBy = complaint.upvotedBy.filter((id) => id.toString() !== userId);
-    complaint.downvotedBy = complaint.downvotedBy.filter((id) => id.toString() !== userId);
+   
+    const updatedComplaint = await Complaint.findByIdAndUpdate(
+      req.params.id,
+      { status: "resolved", resolutionNotes: notes, resolvedAt: new Date() },
+      { new: true }
+    ).populate("assigned_to", "name email");
 
-    if (voteType === "upvote") complaint.upvotedBy.push(userId);
-    if (voteType === "downvote") complaint.downvotedBy.push(userId);
-
-    complaint.upvotes = complaint.upvotedBy.length;
-    complaint.downvotes = complaint.downvotedBy.length;
-
-    await complaint.save();
-
-    res.json({
-      upvotes: complaint.upvotes,
-      downvotes: complaint.downvotes,
-      userVote: voteType,
+    const notificationMessage = `"${complaint.title}" was resolved by ${complaint.assigned_to.name}. Notes: "${notes}"`;
+    const newNotification = new Notification({
+        message: notificationMessage,
+        complaintId: complaint._id,
+        volunteerName: complaint.assigned_to.name
     });
+    await newNotification.save();
+
+    res.json(updatedComplaint);
   } catch (err) {
-    console.error("Error voting:", err);
-    res.status(500).json({ msg: "Error voting" });
+    console.error("Error resolving complaint:", err);
+    res.status(500).json({ error: "Failed to resolve complaint" });
   }
 });
-
-//  POST: Vote comment
-router.post("/:id/comments/:commentId/vote", auth(), async (req, res) => {
-  try {
-    const { voteType } = req.body;
-    const userId = req.user.id;
-
-    const complaint = await Complaint.findById(req.params.id);
-    if (!complaint) {
-      return res.status(404).json({ msg: "Complaint not found" });
-    }
-
-    const comment = complaint.comments.id(req.params.commentId);
-    if (!comment) {
-      return res.status(404).json({ msg: "Comment not found" });
-    }
-
-    // Remove previous vote
-    comment.upvotedBy = comment.upvotedBy.filter((id) => id.toString() !== userId);
-    comment.downvotedBy = comment.downvotedBy.filter((id) => id.toString() !== userId);
-
-    if (voteType === "upvote") comment.upvotedBy.push(userId);
-    if (voteType === "downvote") comment.downvotedBy.push(userId);
-
-    comment.upvotes = comment.upvotedBy.length;
-    comment.downvotes = comment.downvotedBy.length;
-
-    await complaint.save();
-
-    res.json({
-      upvotes: comment.upvotes,
-      downvotes: comment.downvotes,
-      userVote: voteType,
-    });
-  } catch (err) {
-    console.error("Error voting on comment:", err);
-    res.status(500).json({ msg: "Error voting on comment" });
-  }
-});
-
 
 module.exports = router;

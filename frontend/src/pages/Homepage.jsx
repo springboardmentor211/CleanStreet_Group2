@@ -5,7 +5,7 @@ import "./Homepage.css";
 const Homepage = () => {
   const navigate = useNavigate();
 
-  // Remove the auto-redirect to login as homepage should be accessible to all users
+  
 
   const handleReportIssue = () => {
     navigate("/report-issue");
@@ -63,41 +63,7 @@ const Homepage = () => {
         </div>
       </section>
 
-      <section className="report-section">
-        <h2>Report a Civic Issue</h2>
-        <form className="issue-form">
-          <div className="form-group">
-            <label>Issue Title</label>
-            <input type="text" placeholder="Brief description of the issue" />
-          </div>
-          <div className="form-group">
-            <label>Priority Level</label>
-            <select>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Address</label>
-            <input type="text" placeholder="Enter street address" />
-          </div>
-          <div className="form-group">
-            <label>Description</label>
-            <textarea placeholder="Describe the issue in detail..."></textarea>
-          </div>
-          <div className="form-group">
-            <label>Location Map</label>
-            <div style={{ height: "200px", backgroundColor: "#e0e7e9" }}>
-              {/* Placeholder for map */}
-            </div>
-          </div>
-          <button type="submit" className="btn-submit">
-            Submit Report
-          </button>
-        </form>
-      </section>
-
+      
       <footer>
         <p>&copy; 2025 CleanStreet. All rights reserved.</p>
       </footer>

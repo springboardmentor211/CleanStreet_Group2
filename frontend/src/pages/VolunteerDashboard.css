@@ -1,0 +1,287 @@
+.volunteer-dashboard-page {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.volunteer-dashboard-header {
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.volunteer-dashboard-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: #343a40;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.header-nav-links {
+    display: flex;
+    gap: 1.5rem;
+    border-right: 1px solid #dee2e6;
+    padding-right: 1.5rem;
+}
+
+.nav-link {
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #0056b3;
+}
+
+.nav-link.active {
+    color: #343a40;
+    text-decoration: underline;
+}
+
+.refresh-btn-volunteer {
+  background-color: #f8f9fa;
+  color: #343a40;
+  border: 1px solid #ced4da;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+.refresh-btn-volunteer:hover {
+  background-color: #e9ecef;
+}
+.refresh-btn-volunteer:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.logout-btn-volunteer {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.logout-btn-volunteer:hover {
+  background-color: #c82333;
+}
+
+.volunteer-dashboard-content {
+  padding: 2rem;
+}
+
+.summary-cards-volunteer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card-volunteer {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.card-volunteer h2 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  color: #17a2b8; /* Teal color for volunteer */
+}
+
+.card-volunteer p {
+  margin: 0;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.history-volunteer, .profile-volunteer {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.history-volunteer h2, .profile-volunteer h2 {
+  margin-top: 0;
+}
+
+.history-volunteer table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.history-volunteer th, .history-volunteer td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+.history-volunteer th {
+  font-weight: 700;
+  color: #718096;
+}
+
+.status-badge-volunteer {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: white;
+  text-transform: capitalize;
+}
+
+.profile-volunteer .profile-details p {
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.complaint-row-clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.complaint-row-clickable:hover {
+    background-color: #e9ecef;
+}
+
+.expanded-row td {
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.complaint-details-expanded {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-top: 2px solid #007bff;
+}
+
+.expanded-content p {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+    color: #495057;
+}
+
+.expanded-images {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.expanded-images img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.expanded-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    align-self: flex-start;
+}
+
+.action-btn {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+  opacity: 0.85;
+}
+
+.action-btn.review {
+  background-color: #ffc107; /* Yellow */
+  color: #212529;
+}
+
+.action-btn.resolve {
+  background-color: #28a745; /* Green */
+}
+
+/* ✅ NEW: Styles for the centered confirmation modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #2d3748;
+}
+
+.modal-content p {
+  color: #4a5568;
+  margin: 1rem 0 2rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-actions .btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-actions .btn-primary:hover {
+  background-color: #0056b3;
+}

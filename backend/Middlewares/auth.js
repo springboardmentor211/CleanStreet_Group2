@@ -5,7 +5,10 @@ module.exports = function (roles = []) {
   return (req, res, next) => {
     console.log("[Auth Middleware] Checking authorization for:", req.method, req.originalUrl);
 
-    const token = req.headers["authorization"]?.split(" ")[1];
+    //  token extraction
+    const authHeader = req.headers["authorization"];
+    const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+
     if (!token) {
       console.log("[Auth Middleware] No token found in request");
       return res.status(401).json({ msg: "No token" });
@@ -16,14 +19,13 @@ module.exports = function (roles = []) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       console.log("[Auth Middleware] Token verified, user:", decoded);
 
-      // ✅ Normalize req.user
       req.user = {
-        id: decoded.id,   // should be Mongo _id string
+        id: decoded.id, 
         role: decoded.role,
         name: decoded.name || "",
       };
 
-      // ✅ Role-based access check
+      // Role-based access check
       if (roles.length && !roles.includes(req.user.role)) {
         console.log("[Auth Middleware] Access denied - required roles:", roles, "user role:", req.user.role);
         return res.status(403).json({ msg: "Access denied" });
@@ -31,7 +33,7 @@ module.exports = function (roles = []) {
 
       next();
     } catch (error) {
-      console.error("[Auth Middleware] Token verification failed:", error);
+      console.error("[Auth Middleware] Token verification failed:", error.message);
       res.status(401).json({ msg: "Invalid token" });
     }
   };

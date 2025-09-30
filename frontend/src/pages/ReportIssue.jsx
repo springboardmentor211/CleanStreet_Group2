@@ -56,31 +56,31 @@ function ReportIssue() {
     try {
       const formDataWithFiles = new FormData();
 
-      // Append all normal fields
+      
       Object.keys(formData).forEach(key => {
   if (key === "location") {
     formDataWithFiles.append("lat", String(formData.location.lat || ""));
     formDataWithFiles.append("lng", String(formData.location.lng || ""));
 
-    // ✅ Merge manual + map address into one string
+    
     const combinedAddress = [
       formData.address,
       formData.location.address
     ].filter(Boolean).join(" - ");
 
     formDataWithFiles.append("address", combinedAddress);
-  } else if (key !== "address") { // ✅ skip manual address separately
+  } else if (key !== "address") { 
     formDataWithFiles.append(key, formData[key]);
   }
 });
 
 
-      // Append images
+      
       images.forEach(imgObj => {
         formDataWithFiles.append('images', imgObj.file);
       });
 
-      // ✅ Debugging: log what’s being sent
+      
       for (let [key, value] of formDataWithFiles.entries()) {
         console.log(key, value);
       }
@@ -105,7 +105,7 @@ function ReportIssue() {
           <h2>Report a Civic Issue</h2>
           <form onSubmit={handleSubmit} className="report-form">
 
-            {/* Title */}
+            
             <div className="form-group">
               <label htmlFor="title">Issue Title</label>
               <input
@@ -119,7 +119,7 @@ function ReportIssue() {
               />
             </div>
 
-            {/* Issue Type */}
+           
             <div className="form-group">
               <label htmlFor="issueType">Issue Type</label>
               <select
@@ -138,7 +138,7 @@ function ReportIssue() {
               </select>
             </div>
 
-            {/* Priority */}
+            
             <div className="form-group">
               <label htmlFor="priority">Priority Level</label>
               <select
@@ -153,7 +153,21 @@ function ReportIssue() {
               </select>
             </div>
 
-            {/* Address (manual) */}
+           
+           
+           
+            <div className="form-group">
+              <label htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Describe the issue in detail..."
+                required
+              />
+            </div>
+
             <div className="form-group">
               <label htmlFor="address">Address</label>
               <input
@@ -167,20 +181,6 @@ function ReportIssue() {
               />
             </div>
 
-            {/* Description */}
-            <div className="form-group">
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Describe the issue in detail..."
-                required
-              />
-            </div>
-
-            {/* Location (map) */}
             <div className="form-group">
               <label htmlFor="location">Location on Map</label>
               <input
@@ -199,7 +199,7 @@ function ReportIssue() {
               />
             </div>
 
-            {/* Upload Images */}
+            
             <div className="form-group">
               <label htmlFor="images">Upload Images</label>
               <input

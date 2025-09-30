@@ -9,9 +9,9 @@ function ForgotPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // "success" | "error"
+  const [messageType, setMessageType] = useState(""); 
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1); // 1=email, 2=otp, 3=new password
+  const [step, setStep] = useState(1); 
   const navigate = useNavigate();
 
   // Step 1: Send OTP

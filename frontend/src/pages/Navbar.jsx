@@ -4,13 +4,13 @@ import "./Navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
-  const location = useLocation(); // rerun when route changes
+  const location = useLocation(); 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  }, [location]);  // ✅ re-check every time route changes
+  }, [location]);  
 
   const handleLogout = () => {
     localStorage.removeItem("token");

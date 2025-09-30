@@ -4,22 +4,46 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/User");
-const auth = require("../Middlewares/auth"); // ✅ Added
+const auth = require("../Middlewares/auth");
 
 const router = express.Router();
 
 // -------------------- REGISTER --------------------
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, username } = req.body;
 
+    
+    if (!name || !email || !password) {
+      return res.status(400).json({ msg: "Name, email, and password are required" });
+    }
+
+    
     let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ msg: "User already exists" });
+    if (user) return res.status(400).json({ msg: "User already exists with this email" });
 
+    
+    let finalUsername = username && username.trim() !== "" ? username.trim() : undefined;
+    if (finalUsername) {
+      const existingUsername = await User.findOne({ username: finalUsername });
+      if (existingUsername) {
+        return res.status(400).json({ msg: "Username already taken" });
+      }
+    }
+
+    
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = new User({ name, email, password: hashedPassword, role });
+   
+    user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role: role || "user",
+      username: finalUsername
+    });
+
     await user.save();
 
     const token = jwt.sign(
@@ -29,10 +53,15 @@ router.post("/register", async (req, res) => {
     );
 
     const safeUser = await User.findById(user._id).select("-password -__v");
+    res.status(201).json({ token, user: safeUser });
 
-    res.json({ token, user: safeUser });
   } catch (err) {
-    console.error(err);
+    console.error("Error in /register:", err);
+    
+    if (err.code === 11000) {
+      return res.status(400).json({ msg: `Duplicate value: ${JSON.stringify(err.keyValue)}` });
+    }
+
     res.status(500).json({ msg: "Server error" });
   }
 });
@@ -41,6 +70,8 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ msg: "Email and password are required" });
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ msg: "Invalid credentials" });
@@ -55,15 +86,15 @@ router.post("/login", async (req, res) => {
     );
 
     const safeUser = await User.findById(user._id).select("-password -__v");
-
     res.json({ token, user: safeUser });
+
   } catch (err) {
-    console.error(err);
+    console.error("Error in /login:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
 
-// -------------------- NEW: GET LOGGED-IN USER --------------------
+// -------------------- GET CURRENT USER --------------------
 router.get("/me", auth(), async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password -__v");
@@ -75,7 +106,7 @@ router.get("/me", auth(), async (req, res) => {
   }
 });
 
-// -------------------- OTP Routes --------------------
+// -------------------- SEND OTP --------------------
 router.post("/send-otp", async (req, res) => {
   const { email } = req.body;
   try {
@@ -105,12 +136,14 @@ router.post("/send-otp", async (req, res) => {
     });
 
     res.json({ msg: "OTP sent to email." });
+
   } catch (err) {
-    console.error(err);
+    console.error("Error in /send-otp:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
 
+// -------------------- VERIFY OTP --------------------
 router.post("/verify-otp", async (req, res) => {
   const { email, otp } = req.body;
   try {
@@ -123,12 +156,14 @@ router.post("/verify-otp", async (req, res) => {
     await user.save();
 
     res.json({ msg: "OTP verified successfully" });
+
   } catch (err) {
-    console.error(err);
+    console.error("Error in /verify-otp:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
 
+// -------------------- RESET PASSWORD --------------------
 router.post("/reset-password", async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -146,8 +181,9 @@ router.post("/reset-password", async (req, res) => {
     await user.save();
 
     res.json({ msg: "Password reset successful" });
+
   } catch (err) {
-    console.error(err);
+    console.error("Error in /reset-password:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });

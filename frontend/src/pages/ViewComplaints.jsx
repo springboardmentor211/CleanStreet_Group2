@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import api from "../utils/api";
-import { useAuth } from "../context/AuthContext"; // ✅ Import Auth Context
+import { useAuth } from "../context/AuthContext"; 
 import "./ViewComplaints.css";
 
 function ViewComplaints() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { user } = useAuth(); // ✅ Logged-in user
-
+  const { user } = useAuth(); 
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
@@ -85,7 +84,7 @@ function ViewComplaints() {
                   className="complaint-card"
                   onClick={() => navigate(`/complaints/${complaint._id}`)}
                 >
-                  {/* Title & Status */}
+                  
                   <div className="complaint-card-header">
                     <h3>{complaint.title}</h3>
                     <span
@@ -96,7 +95,7 @@ function ViewComplaints() {
                     </span>
                   </div>
 
-                  {/* Meta Info */}
+                  
                   <div className="complaint-meta">
                     <span>📍 {complaint.address || "Unknown Location"}</span>
                     <span>
@@ -109,14 +108,13 @@ function ViewComplaints() {
                     </span>
                   </div>
 
-                  {/* Description */}
                   <p className="complaint-description">
                     {complaint.description.length > 120
                       ? complaint.description.slice(0, 120) + "..."
                       : complaint.description}
                   </p>
 
-                  {/* Images */}
+                 
                   {complaint.images && complaint.images.length > 0 && (
                     <div className="complaint-images-preview">
                       {complaint.images.slice(0, 2).map((img, idx) => (
@@ -133,12 +131,12 @@ function ViewComplaints() {
                     </div>
                   )}
 
-                  {/* ✅ Delete button only for owner */}
+                
                   {user && complaint.user_id === user.id && (
                     <button
                       className="delete-button"
                       onClick={(e) => {
-                        e.stopPropagation(); // prevent navigation
+                        e.stopPropagation(); 
                         handleDelete(complaint._id);
                       }}
                     >
