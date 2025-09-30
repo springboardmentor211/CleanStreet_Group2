@@ -34,13 +34,13 @@ function IssueMap() {
 
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-      {/* Navbar on top */}
+     
       <Navbar />
 
-      {/* Map below */}
+     
       <div style={{ flex: 1 }}>
         <MapContainer
-          center={[20.5937, 78.9629]} // India
+          center={[20.5937, 78.9629]} 
           zoom={5}
           style={{ height: "100%", width: "100%" }}
         >
@@ -54,15 +54,15 @@ function IssueMap() {
               <CircleMarker
                 key={c._id}
                 center={[
-                  c.location.coordinates[1], // lat
-                  c.location.coordinates[0], // lng
+                  c.location.coordinates[1], 
+                  c.location.coordinates[0], 
                 ]}
                 radius={10}
                 color={issueTypeColors[c.issueType] || "#000"}
                 fillColor={issueTypeColors[c.issueType] || "#000"}
                 fillOpacity={0.7}
               >
-                {/* 🟢 Tooltip shows on hover */}
+                
                 <Tooltip direction="top" offset={[0, -10]} opacity={1}>
                   <div>
                     <strong>{c.title}</strong>
@@ -71,7 +71,7 @@ function IssueMap() {
                   </div>
                 </Tooltip>
 
-                {/* Popup still available on click */}
+                
                 <Popup>
                   <div
                     style={{

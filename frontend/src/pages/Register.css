@@ -1,98 +1,147 @@
-.page-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;          
+
+/* --- Page Background --- */
+.register-page-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;   /* 🔽 align top instead of center */
-  background: #f5f7fa;
-  overflow: hidden;
-  padding-top: 80px;         /* 🔽 move card below navbar */
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f4f8;
 }
 
-.card {
+/* --- The main container card with the split layout --- */
+.register-container {
   width: 100%;
-  max-width: 400px;          /* 🔽 narrower width */
-  background: #ffffff;
-  padding: 15px 18px;
-  border-radius: 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  max-width: 900px;
+  min-height: 600px;
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: scaleUp 0.6s ease-out;
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Left Panel (Illustration) --- */
+.register-left-panel {
+  width: 45%;
+  background-color: #16a34a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Right Panel (Form) --- */
+.register-right-panel {
+  width: 55%;
+  padding: 50px;
   display: flex;
   flex-direction: column;
-  max-height: 85vh;
-  overflow-y: auto;
+  justify-content: center;
 }
 
-
-.brand-title {
-  text-align: center;
-  color: #16a34a;
-  font-weight: 700;
-  font-size: 1.2rem;   /* 🔽 smaller font */
-  margin-bottom: 5px;
+/* --- The form itself inside the right panel --- */
+.register-form {
+  width: 100%;
 }
 
-.card h2 {
-  text-align: center;
-  margin-bottom: 2px;
-  font-size: 1rem;     /* 🔽 reduced */
-  color: #1a202c;
-  font-weight: 600;
+.register-form h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-align: left;
 }
 
-.card p.subtitle {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #4a5568;
-  margin-bottom: 3px;
+.register-form .subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  text-align: left;
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.card label {
-  font-size: 0.8rem;   /* 🔽 smaller labels */
-  color: #2d3748;
-  margin-bottom: 5px;
-  font-weight: 500;
+/* --- Input field styles --- */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
 }
 
 .input-field {
-  padding: 8px;       /* 🔽 slimmer */
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  background-color: #f7fafc;
-  font-size: 0.85rem;
-  margin-bottom: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 40px 12px 40px; 
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  font-size: 0.9rem;
   transition: all 0.2s ease-in-out;
 }
 
 .input-field:focus {
   outline: none;
   border-color: #16a34a;
-  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+  background-color: #ffffff;
+}
+.password-toggle {
+  position: absolute;
+  right: 12px; 
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
 }
 
+/* --- Button and Link styles --- */
 .btn-primary {
-  padding: 8px;        /* 🔽 smaller button */
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
   background: #16a34a;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;  /* 🔽 smaller font */
+  font-size: 1rem;
   font-weight: 600;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
 .btn-primary:hover {
   background: #15803d;
+  transform: translateY(-2px);
 }
 
 .redirect-text {
   text-align: center;
-  font-size: 0.8rem;
-  color: #4a5568;
-  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #475569;
+  margin-top: 20px;
 }
 
 .redirect-text a {
@@ -102,13 +151,35 @@
 }
 
 .redirect-text a:hover {
-  color: #15803d;
+  text-decoration: underline;
 }
 
 .error-text {
   text-align: center;
-  color: #e53e3e;
-  font-size: 0.8rem;
-  margin-bottom: 10px;
+  color: #dc2626;
+  background-color: #fee2e2;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
   font-weight: 500;
+}
+
+/* --- RESPONSIVE DESIGN FOR MOBILE --- */
+@media (max-width: 768px) {
+  .register-container {
+    flex-direction: column;
+    min-height: auto;
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .register-left-panel {
+    display: none;
+  }
+
+  .register-right-panel {
+    width: 100%;
+    padding: 40px 30px;
+  }
 }

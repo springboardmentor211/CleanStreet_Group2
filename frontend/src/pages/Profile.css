@@ -1,3 +1,4 @@
+
 .profile-container {
   background: #f0f5fa;
   min-height: calc(100vh - 64px);
@@ -397,4 +398,29 @@
   background: #e2e8f0;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Back to Dashboard arrow */
+.back-to-dashboard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2b6cb0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin: 0 auto 20px;
+  max-width: 1200px;
+  width: 100%;
+  transition: color 0.2s ease;
+}
+
+.back-to-dashboard:hover {
+  color: #2c5282;
+  text-decoration: underline;
+}
+
+.back-to-dashboard svg {
+  width: 22px;
+  height: 22px;
 }

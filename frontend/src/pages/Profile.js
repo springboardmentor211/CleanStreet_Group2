@@ -1,11 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
 import './Profile.css';
 
 function Profile() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -23,9 +24,16 @@ function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        // const response = await api.get('/users/profile');
-        const response = await api.get('/users/me'); 
-        setUser(response.data);
+        const response = await api.get('/api/users/me'); 
+        
+        
+        const mockUser = {
+            ...response.data,
+            complaints: { total: 0, resolved: 0, pending: 0 },
+            joinedDate: response.data.createdAt 
+        };
+        setUser(mockUser);
+
       } catch (error) {
         console.error('Error fetching profile:', error);
       }
@@ -35,6 +43,7 @@ function Profile() {
   }, []);
 
   const getInitials = (name) => {
+    if (!name) return '';
     return name
       .split(' ')
       .map(word => word[0])
@@ -43,6 +52,7 @@ function Profile() {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -54,14 +64,21 @@ function Profile() {
     <div>
       <Navbar />
       <div className="profile-container">
+       
+        <div className="back-to-dashboard" onClick={() => navigate('/dashboard')}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
+          <span>Back</span>
+        </div>
+
         <div className="profile-wrapper">
           <div className="profile-header">
             <div className="profile-avatar">
               {user.profilePicture  ? (
-                // <img src={user.avatar} alt={user.name} />
                 <img src={user.profilePicture} alt={user.name} />
               ) : (
-                getInitials(user.name || 'User Name')
+                getInitials(user.name)
               )}
             </div>
             <h1 className="profile-name">{user.name}</h1>

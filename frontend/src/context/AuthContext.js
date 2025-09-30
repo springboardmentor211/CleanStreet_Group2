@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = useCallback((newData) => {
     console.log('AuthContext: Updating user data:', newData);
     if (newData) {
-      // Ensure we're not storing undefined values
+     
       const cleanedData = {
         // _id: newData._id,
         // name: newData.name || '',
@@ -39,16 +39,18 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem('user');
     }
-  }, []); // No dependencies needed as it only uses setState
+  }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('user');
     setUser(null);
-  }, []); // No dependencies needed
+    window.location.href = '/'; 
+    
+  }, []); 
 
-  // Memoize fetchUser to prevent infinite re-renders
+
   const fetchUser = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -58,7 +60,7 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      const res = await api.get('/users/me');
+      const res = await api.get('/api/users/me');
       updateUser(res.data);
     } catch (err) {
       console.error('Error fetching user:', err);
@@ -66,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [updateUser]); // Include updateUser as a dependency
+  }, [updateUser]);
 
   useEffect(() => {
     fetchUser();
