@@ -1,5 +1,5 @@
 
-/* --- Page Background --- */
+/*  Page Background  */
 .register-page-container {
   display: flex;
   justify-content: center;
@@ -8,7 +8,7 @@
   background-color: #f0f4f8;
 }
 
-/* --- The main container card with the split layout --- */
+/*  The main container card with the split layout  */
 .register-container {
   width: 100%;
   max-width: 900px;
@@ -32,7 +32,7 @@
   }
 }
 
-/* --- Left Panel (Illustration) --- */
+/*  Left Panel (Illustration)  */
 .register-left-panel {
   width: 45%;
   background-color: #16a34a;
@@ -41,7 +41,7 @@
   align-items: center;
 }
 
-/* --- Right Panel (Form) --- */
+/*  Right Panel (Form)  */
 .register-right-panel {
   width: 55%;
   padding: 50px;
@@ -50,7 +50,7 @@
   justify-content: center;
 }
 
-/* --- The form itself inside the right panel --- */
+/*  The form itself inside the right panel  */
 .register-form {
   width: 100%;
 }
@@ -72,7 +72,7 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* --- Input field styles --- */
+/*  Input field styles  */
 .input-group {
   position: relative;
   margin-bottom: 20px;
@@ -115,7 +115,7 @@
   color: #64748b;
 }
 
-/* --- Button and Link styles --- */
+/*  Button and Link styles  */
 .btn-primary {
   box-sizing: border-box;
   width: 100%;
@@ -165,7 +165,13 @@
   font-weight: 500;
 }
 
-/* --- RESPONSIVE DESIGN FOR MOBILE --- */
+
+.input-field::-ms-reveal,
+.input-field::-webkit-password-reveal-button {
+  display: none;
+}
+
+/*  RESPONSIVE DESIGN FOR MOBILE  */
 @media (max-width: 768px) {
   .register-container {
     flex-direction: column;

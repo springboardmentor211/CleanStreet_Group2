@@ -93,7 +93,7 @@ function Login() {
                             <Lock className="input-icon" size={18} />
                             <input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="Password" onChange={handleChange} required className="input-field" autoComplete="current-password" />
                             <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                                {/* {showPassword ? <EyeOff size={18} /> : <Eye size={18} />} */}
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
 

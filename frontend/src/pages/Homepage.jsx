@@ -18,9 +18,9 @@ const Homepage = () => {
           <Link to="/">CleanStreet</Link>
         </div>
         <div className="navbar-middle">
-          <Link to="/dashboard">Dashboard</Link>
-          <Link to="/report-issue">Report Issue</Link>
-          <Link to="/view-complaints">View Complaints</Link>
+          <Link to="/login">Dashboard</Link>
+          <Link to="/login">Report Issue</Link>
+          <Link to="/login">View Complaints</Link>
         </div>
         <div className="navbar-right">
           <Link to="/login" className="btn-login">Login</Link>
@@ -36,7 +36,7 @@ const Homepage = () => {
           <button onClick={handleReportIssue} className="btn-report">
             + Report an Issue
           </button>
-          <Link to="/view-complaints" className="btn-view">
+          <Link to="/login" className="btn-view">
             View Reports
           </Link>
         </div>

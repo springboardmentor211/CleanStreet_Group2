@@ -1,6 +1,7 @@
+
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import "./ForgotPassword.css";
 
 function ForgotPassword() {
@@ -105,76 +106,74 @@ function ForgotPassword() {
   };
 
   return (
-    <div>
-      <Navbar />
-      <div className="forgot-container">
-        {step === 1 && (
-          <form className="forgot-form" onSubmit={handleSendOtp}>
-            <h1 className="brand-title">Clean Street</h1>
-            <h2>Forgot Password</h2>
-            <p className="subtitle">Enter your registered email</p>
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={loading}>
-              {loading ? "Sending..." : "Send OTP"}
-            </button>
-            {message && <p className={`message ${messageType}`}>{message}</p>}
-            <p className="redirect-text">
-              Back to <Link to="/login">Login</Link>
-            </p>
-          </form>
-        )}
+   
+    <div className="forgot-container">
+      {step === 1 && (
+        <form className="forgot-form" onSubmit={handleSendOtp}>
+          <h1 className="brand-title">Clean Street</h1>
+          <h2>Forgot Password</h2>
+          <p className="subtitle">Enter your registered email</p>
+          <input
+            type="email"
+            placeholder="Enter your email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Sending..." : "Send OTP"}
+          </button>
+          {message && <p className={`message ${messageType}`}>{message}</p>}
+          <p className="redirect-text">
+            Back to <Link to="/login">Login</Link>
+          </p>
+        </form>
+      )}
 
-        {step === 2 && (
-          <form className="forgot-form" onSubmit={handleVerifyOtp}>
-            <h1 className="brand-title">Clean Street</h1>
-            <h2>Enter OTP</h2>
-            <p className="subtitle">Check your email for the OTP</p>
-            <input
-              type="text"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={loading}>
-              {loading ? "Verifying..." : "Verify OTP"}
-            </button>
-            {message && <p className={`message ${messageType}`}>{message}</p>}
-          </form>
-        )}
+      {step === 2 && (
+        <form className="forgot-form" onSubmit={handleVerifyOtp}>
+          <h1 className="brand-title">Clean Street</h1>
+          <h2>Enter OTP</h2>
+          <p className="subtitle">Check your email for the OTP</p>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            required
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Verifying..." : "Verify OTP"}
+          </button>
+          {message && <p className={`message ${messageType}`}>{message}</p>}
+        </form>
+      )}
 
-        {step === 3 && (
-          <form className="forgot-form" onSubmit={handleResetPassword}>
-            <h1 className="brand-title">Clean Street</h1>
-            <h2>Reset Password</h2>
-            <p className="subtitle">Enter your new password</p>
-            <input
-              type="password"
-              placeholder="New password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={loading}>
-              {loading ? "Resetting..." : "Reset Password"}
-            </button>
-            {message && <p className={`message ${messageType}`}>{message}</p>}
-          </form>
-        )}
-      </div>
+      {step === 3 && (
+        <form className="forgot-form" onSubmit={handleResetPassword}>
+          <h1 className="brand-title">Clean Street</h1>
+          <h2>Reset Password</h2>
+          <p className="subtitle">Enter your new password</p>
+          <input
+            type="password"
+            placeholder="New password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Confirm new password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Resetting..." : "Reset Password"}
+          </button>
+          {message && <p className={`message ${messageType}`}>{message}</p>}
+        </form>
+      )}
     </div>
   );
 }
