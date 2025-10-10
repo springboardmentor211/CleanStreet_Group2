@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../utils/api';
@@ -17,6 +17,23 @@ const issueTypes = [
   { value: "other", label: "Other" }
 ];
 
+const SuccessModal = ({ isOpen, onClose, message }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h3>Success!</h3>
+        <p>{message}</p>
+        <button onClick={onClose} className="modal-btn btn-primary">
+          OK
+        </button>
+      </div>
+    </div>
+  );
+};
+
+
 function ReportIssue() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -30,6 +47,8 @@ function ReportIssue() {
   });
 
   const [images, setImages] = useState([]);
+  
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -55,56 +74,54 @@ function ReportIssue() {
     e.preventDefault();
     try {
       const formDataWithFiles = new FormData();
-
       
       Object.keys(formData).forEach(key => {
-  if (key === "location") {
-    formDataWithFiles.append("lat", String(formData.location.lat || ""));
-    formDataWithFiles.append("lng", String(formData.location.lng || ""));
-
-    
-    const combinedAddress = [
-      formData.address,
-      formData.location.address
-    ].filter(Boolean).join(" - ");
-
-    formDataWithFiles.append("address", combinedAddress);
-  } else if (key !== "address") { 
-    formDataWithFiles.append(key, formData[key]);
-  }
-});
-
-
+        if (key === "location") {
+          formDataWithFiles.append("lat", String(formData.location.lat || ""));
+          formDataWithFiles.append("lng", String(formData.location.lng || ""));
+          const combinedAddress = [formData.address, formData.location.address].filter(Boolean).join(" - ");
+          formDataWithFiles.append("address", combinedAddress);
+        } else if (key !== "address") { 
+          formDataWithFiles.append(key, formData[key]);
+        }
+      });
       
       images.forEach(imgObj => {
         formDataWithFiles.append('images', imgObj.file);
       });
 
-      
-      for (let [key, value] of formDataWithFiles.entries()) {
-        console.log(key, value);
-      }
-
       await api.post('/api/complaints', formDataWithFiles, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      alert('Issue reported successfully!');
-      navigate('/view-complaints');
+      setShowSuccessModal(true);
+      
     } catch (err) {
       console.error("Submit error:", err.response?.data || err.message);
       alert(err.response?.data?.msg || 'Error reporting issue');
     }
   };
+  
+  const handleModalClose = () => {
+    setShowSuccessModal(false);
+    navigate('/view-complaints');
+  };
 
   return (
     <div>
       <Navbar />
+      
+   
+      <SuccessModal 
+        isOpen={showSuccessModal}
+        onClose={handleModalClose}
+        message="Your issue has been reported successfully! You will now be redirected."
+      />
+
       <div className="report-page">
         <div className="report-container">
           <h2>Report a Civic Issue</h2>
           <form onSubmit={handleSubmit} className="report-form">
-
             
             <div className="form-group">
               <label htmlFor="title">Issue Title</label>
@@ -118,7 +135,6 @@ function ReportIssue() {
                 required
               />
             </div>
-
            
             <div className="form-group">
               <label htmlFor="issueType">Issue Type</label>
@@ -137,7 +153,6 @@ function ReportIssue() {
                 ))}
               </select>
             </div>
-
             
             <div className="form-group">
               <label htmlFor="priority">Priority Level</label>
@@ -152,9 +167,6 @@ function ReportIssue() {
                 <option value="high">High</option>
               </select>
             </div>
-
-           
-           
            
             <div className="form-group">
               <label htmlFor="description">Description</label>
@@ -198,7 +210,6 @@ function ReportIssue() {
                 }
               />
             </div>
-
             
             <div className="form-group">
               <label htmlFor="images">Upload Images</label>
@@ -227,31 +238,29 @@ function ReportIssue() {
               </div>
             </div>
 
-           <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-  
-  <button
-    type="button"
-    className="clear-button"
-    onClick={() => {
-      setFormData({
-        title: "",
-        issueType: "",
-        priority: "low",
-        address: "",
-        landmark: "",
-        description: "",
-        location: { address: "", lat: "", lng: "" },
-      });
-      setImages([]);
-    }}
-  >
-    Clear Form
-  </button>
-  <button type="submit" className="submit-button">
-    Submit Report
-  </button>
-</div>
-
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
+              <button
+                type="button"
+                className="clear-button"
+                onClick={() => {
+                  setFormData({
+                    title: "",
+                    issueType: "",
+                    priority: "low",
+                    address: "",
+                    landmark: "",
+                    description: "",
+                    location: { address: "", lat: "", lng: "" },
+                  });
+                  setImages([]);
+                }}
+              >
+                Clear Form
+              </button>
+              <button type="submit" className="submit-button">
+                Submit Report
+              </button>
+            </div>
           </form>
         </div>
       </div>

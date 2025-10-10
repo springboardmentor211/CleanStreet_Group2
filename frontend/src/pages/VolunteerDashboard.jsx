@@ -1,14 +1,8 @@
 
+
 import React, { useEffect, useState, useCallback } from "react";
-import {
-  getVolunteerSummary,
-  getVolunteerHistory,
-  volunteerReview,
-  resolveComplaint
-} from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import "./VolunteerDashboard.css";
-
 
 const ConfirmationMessageModal = ({ isOpen, message, onClose }) => {
   if (!isOpen) return null;
@@ -34,19 +28,33 @@ const VolunteerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [expandedComplaintId, setExpandedComplaintId] = useState(null);
 
- 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("Authentication token not found.");
+      }
+
+      const authHeader = { 'Authorization': `Bearer ${token}` };
+
       const [summaryRes, historyRes] = await Promise.all([
-        getVolunteerSummary(),
-        getVolunteerHistory(),
+        fetch('http://localhost:5000/api/volunteer/summary', { headers: authHeader }),
+        fetch('http://localhost:5000/api/volunteer/history', { headers: authHeader }),
       ]);
-      setSummary(summaryRes.data);
-      setHistory(historyRes.data);
+
+      if (!summaryRes.ok || !historyRes.ok) {
+        throw new Error("Failed to fetch volunteer data.");
+      }
+
+      const summaryData = await summaryRes.json();
+      const historyData = await historyRes.json();
+
+      setSummary(summaryData);
+      setHistory(historyData);
     } catch (err) {
       console.error("Error fetching volunteer data:", err);
     } finally {
@@ -64,34 +72,57 @@ const VolunteerDashboard = () => {
     setExpandedComplaintId(prevId => (prevId === complaintId ? null : complaintId));
   };
 
- 
+  const handleUpdateStatus = async (complaintId, status, notes) => {
+    const endpoint = status === 'in_review' ? 'review' : 'resolve';
+    const body = status === 'in_review' 
+        ? { reviewNotes: "Volunteer has started reviewing this complaint." }
+        : { notes: "Task completed and issue has been resolved." };
+    
+    try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`http://localhost:5000/api/complaints/${complaintId}/${endpoint}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+            const errData = await res.json();
+            throw new Error(errData.msg || `Failed to mark as ${status}`);
+        }
+        
+        return await res.json();
+    } catch (err) {
+        console.error(`Error updating status to ${status}:`, err);
+        throw err;
+    }
+  };
+
   const handleReview = async (complaintId) => {
     try {
-      await volunteerReview(complaintId);
+      await handleUpdateStatus(complaintId, 'in_review');
       setConfirmMessage("Complaint status has been updated to 'In Review'.");
       setShowConfirmModal(true);
       fetchData();
       setExpandedComplaintId(null);
     } catch (err) {
-      console.error(err);
-      alert("Failed to update status.");
+      alert(`Error: ${err.message}`);
     }
   };
   
-  
   const handleResolve = async (complaintId, complaintTitle) => {
     try {
-      const resolutionNotes = "Task completed and issue has been resolved.";
-      await resolveComplaint(complaintId, resolutionNotes);
-      
+      await handleUpdateStatus(complaintId, 'resolved');
       setConfirmMessage(`Complaint "${complaintTitle}" has been successfully resolved!`);
       setShowConfirmModal(true);
-      
       fetchData();
       setExpandedComplaintId(null);
     } catch (err) {
-      console.error(err);
-      alert("Failed to resolve complaint.");
+      alert(`Error: ${err.message}`);
     }
   };
 
@@ -120,7 +151,7 @@ const VolunteerDashboard = () => {
         </div>
       </header>
       <main className="volunteer-dashboard-content">
-        {loading ? ( <p>Loading your data...</p> ) : (
+        {loading ? ( <p style={{ textAlign: 'center' }}>Loading your data...</p> ) : (
             <>
                 {activeTab === 'dashboard' && (
                     <section className="summary-cards-volunteer">
@@ -169,7 +200,7 @@ const VolunteerDashboard = () => {
                                 )}
                               </React.Fragment>
                             ))
-                          ) : (<tr><td colSpan="3">No complaints have been assigned to you yet.</td></tr>)}
+                          ) : (<tr><td colSpan="3" style={{ textAlign: 'center' }}>No complaints have been assigned to you yet.</td></tr>)}
                         </tbody>
                       </table>
                     </section>
@@ -186,7 +217,6 @@ const VolunteerDashboard = () => {
             </>
         )}
       </main>
-
   
       <ConfirmationMessageModal
         isOpen={showConfirmModal}

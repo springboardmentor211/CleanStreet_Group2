@@ -89,7 +89,7 @@ function Register() {
                         
                         <div className="input-group">
                             <MapPin className="input-icon" size={18} />
-                            <input id="location" name="location" type="text" placeholder="Location (e.g., Visakhapatnam)" onChange={handleChange} className="input-field" />
+                            <input id="location" name="location" type="text" placeholder="Location (e.g., Dwaraka Tirumala)" onChange={handleChange} className="input-field" />
                         </div>
                         
                         <div className="input-group">

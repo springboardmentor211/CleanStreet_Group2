@@ -1,5 +1,3 @@
-
-
 /* VARIABLES */
 :root {
   
@@ -64,7 +62,14 @@
   margin: 0;
 }
 
-/*  SIDEBAR  */
+.page-subtitle {
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* SIDEBAR  */
 .sidebar {
   width: 260px;
   background-color: var(--bg-sidebar);
@@ -140,10 +145,10 @@
   color: white;
 }
 
-/*  CARDS  */
+/* CARDS  */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
@@ -180,28 +185,36 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 .user-summary-card .card-info p, .report-summary-card .card-info p {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.25rem 0;
     color: var(--text-secondary);
     font-weight: 500;
+    font-size: 0.9rem;
 }
 .user-summary-card .card-info span, .report-summary-card .card-info span {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 700;
     color: var(--text-primary);
 }
 .user-summary-card .card-icon, .report-summary-card .card-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
-/*  CHARTS & ANALYTICS  */
-.chart-card, .activity-log-container, .analytics-grid > div {
+.card-icon.green { background-color: #dcfce7; color: #166534; }
+.card-icon.blue { background-color: #dbeafe; color: #1d4ed8; }
+.card-icon.purple { background-color: #f3e8ff; color: #7e22ce; }
+
+
+/* CHARTS & ANALYTICS  */
+.chart-card, .activity-log-container {
   background-color: var(--bg-card);
   border-radius: var(--border-radius);
   padding: 1.5rem;
@@ -210,18 +223,97 @@
   border: 1px solid var(--border-color);
 }
 
+.analytics-grid > div {
+  background-color: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+
 .chart-card h2, .activity-log-container h2, .analytics-grid h3 {
   margin: 0 0 1.5rem 0;
   font-size: 1.25rem;
   font-weight: 600;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 1rem;
+  color: var(--text-primary);
 }
 
 .overview-charts-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.analytics-grid > div {
+    margin-top: 0;
+}
+
+.category-breakdown-card .category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+.category-breakdown-card .category-info {
+    flex-grow: 1;
+}
+.category-breakdown-card .category-info p {
+    margin: 0 0 0.25rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.category-breakdown-card .category-bar {
+    width: 100%;
+    height: 8px;
+    background-color: var(--bg-page);
+    border-radius: 99px;
+    overflow: hidden;
+}
+.category-breakdown-card .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+}
+.category-breakdown-card .category-percentage {
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 40px;
+    text-align: right;
+}
+
+.export-options-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.export-options-card button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    transition: all var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.export-options-card button:hover {
+    background-color: var(--border-color);
+    border-color: #d1d5db;
 }
 
 /*TABLES  */
@@ -234,13 +326,29 @@
   border: 1px solid var(--border-color);
 }
 
+.table-container .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.table-container .table-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+.table-container .table-header div {
+    display: flex;
+    gap: 1rem;
+}
+
 .complaints-table {
   width: 100%;
   border-collapse: collapse;
 }
 
 .complaints-table th, .complaints-table td {
-  padding: 1rem 1.25rem;
+  padding: 1rem 0.5rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
@@ -259,19 +367,49 @@
 .complaints-table tbody tr {
   transition: background-color var(--transition-speed) ease;
 }
+.complaints-table tbody tr.clickable-row:hover {
+  background-color: var(--bg-hover);
+  cursor: pointer;
+}
 
 .complaints-table tbody tr:last-child td {
   border-bottom: none;
-}
-
-.complaints-table tbody tr:hover {
-  background-color: var(--bg-hover);
 }
 
 .complaint-title {
   font-weight: 600;
   color: var(--text-primary);
 }
+
+.filter-controls {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  gap: 0.5rem;
+  background-color: #fff;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--text-secondary);
+  transition: all var(--transition-speed) ease;
+}
+.filter-btn:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+.filter-btn.active {
+  background-color: var(--color-primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
 
 /* PILLS & BADGES */
 .status-pill, .priority-pill, .role-pill, .category-pill, .report-status-pill {
@@ -284,7 +422,6 @@
   line-height: 1.5;
 }
 
-/* Status */
 .status-pill.status-in-review { background-color: #fef9c3; color: #a16207; }
 .status-pill.status-pending, .status-pill.status-received { background-color: #ffedd5; color: #c2410c; }
 .status-pill.status-assigned { background-color: #e0e7ff; color: #4338ca; }
@@ -293,12 +430,10 @@
 .status-pill.status-inactive { background-color: #e5e7eb; color: #4b5563; }
 .report-status-pill.status-ready { background-color: #dcfce7; color: #166534; }
 
-/* Priority */
 .priority-pill.priority-high { background-color: #fee2e2; color: #b91c1c; }
 .priority-pill.priority-medium { background-color: #fef3c7; color: #b45309; }
 .priority-pill.priority-low { background-color: #d1fae5; color: #047857; }
 
-/* Role */
 .role-pill.role-admin { background-color: #fee2e2; color: #b91c1c; }
 .role-pill.role-volunteer { background-color: #f3e8ff; color: #7e22ce; }
 .role-pill.role-user { background-color: #dbeafe; color: #1d4ed8; }
@@ -341,14 +476,14 @@
   transition: all var(--transition-speed) ease;
 }
 
-.btn-primary { background-color: var(--color-primary); color: white; }
-.btn-primary:hover { background-color: var(--color-primary-light); }
+.btn-primary { background-color: rgb(63, 209, 63); color: white; }
+.btn-primary:hover { background-color: green; }
 .btn-secondary { background: var(--border-color); color: var(--text-primary); }
 .btn-secondary:hover { background-color: #d1d5db; }
 .btn-danger { background-color: var(--color-danger); color: white; }
 .btn-danger:hover { background-color: #f87171; }
 
-/*  MODALS */
+/* MODALS */
 .modal-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(17, 24, 39, 0.6);
@@ -394,7 +529,7 @@
   margin-top: 2rem;
 }
 
-/*  USER DETAILS MODAL */
+/* USER DETAILS MODAL */
 .user-details-modal {
     padding: 0;
     overflow: hidden;
@@ -464,4 +599,84 @@
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
+}
+
+/* Custom Recharts Tooltip */
+.custom-recharts-tooltip {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+}
+
+.custom-recharts-tooltip .recharts-tooltip-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.custom-recharts-tooltip .recharts-tooltip-item {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Recent Activity Log Scroll */
+.activity-log-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 350px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border-color);
+}
+
+.activity-log-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.activity-log-item:last-child {
+  border-bottom: none;
+}
+
+.activity-message {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.activity-time {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap; 
+  flex-shrink: 0;
+}
+
+
+
+.success-modal-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #dcfce7; 
+  color: #22c55e; 
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+}
+
+.table-filter-dropdown {
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }

@@ -123,7 +123,7 @@
   font-size: 0.9rem;
 }
 .forgot-link a {
-  color: #16a34a;
+  color: #ec4d4d;
   text-decoration: none;
   font-weight: 600;
 }
@@ -200,4 +200,9 @@
     width: 100%;
     padding: 40px 30px;
   }
+}
+
+.input-field::-ms-reveal,
+.input-field::-webkit-password-reveal-button {
+  display: none;
 }

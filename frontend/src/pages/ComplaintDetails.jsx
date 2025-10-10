@@ -1,12 +1,27 @@
 
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { getAdminVolunteers, assignComplaint } from "../utils/api";
 import "./ComplaintDetails.css";
-import { ArrowLeft,  ThumbsDown, ThumbsUp } from "lucide-react"; 
+import { ArrowLeft, ThumbsDown, ThumbsUp } from "lucide-react";
+
+const SuccessModal = ({ isOpen, onClose, title, message }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h3>{title}</h3>
+        <p>{message}</p>
+        <button onClick={onClose} className="modal-btn">
+          OK
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function ComplaintDetails() {
   const { id } = useParams();
@@ -17,6 +32,8 @@ export default function ComplaintDetails() {
   const [newComment, setNewComment] = useState("");
   const [volunteers, setVolunteers] = useState([]);
   const [selectedVolunteer, setSelectedVolunteer] = useState("");
+
+  const [showAssignModal, setShowAssignModal] = useState(false);
 
   useEffect(() => {
     api.get(`/api/complaints/${id}`)
@@ -34,10 +51,7 @@ export default function ComplaintDetails() {
     if (!newComment.trim()) return;
     try {
       const res = await api.post(`/api/complaints/${id}/comment`, { text: newComment });
-      setComplaint(prev => ({
-        ...prev,
-        comments: [...prev.comments, res.data]
-      }));
+      setComplaint(prev => ({ ...prev, comments: [...prev.comments, res.data] }));
       setNewComment("");
     } catch (err) {
       console.error("Error adding comment:", err);
@@ -47,11 +61,7 @@ export default function ComplaintDetails() {
   const handleComplaintVote = async (voteType) => {
     try {
       const res = await api.post(`/api/complaints/${id}/vote`, { voteType });
-      setComplaint(prev => ({
-        ...prev,
-        upvotes: res.data.upvotes,
-        downvotes: res.data.downvotes
-      }));
+      setComplaint(prev => ({ ...prev, upvotes: res.data.upvotes, downvotes: res.data.downvotes }));
     } catch (err) {
       console.error("Error voting:", err);
     }
@@ -65,7 +75,8 @@ export default function ComplaintDetails() {
       try {
           const updatedComplaint = await assignComplaint(id, selectedVolunteer);
           setComplaint(updatedComplaint.data);
-          alert("Complaint assigned successfully!");
+          
+          setShowAssignModal(true); 
       } catch (err) {
           console.error("Error assigning complaint:", err);
           alert("Failed to assign complaint.");
@@ -79,6 +90,14 @@ export default function ComplaintDetails() {
 
   return (
     <div className="complaint-details-page">
+      {/* 4. Render the modal component */}
+      <SuccessModal
+        isOpen={showAssignModal}
+        onClose={() => setShowAssignModal(false)}
+        title="Success!"
+        message="The complaint has been assigned successfully."
+      />
+
       <div className="complaint-details-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           <ArrowLeft size={18} />
@@ -86,16 +105,11 @@ export default function ComplaintDetails() {
         </button>
         
         <div className="details-grid">
-          
           <div className="complaint-content-card">
             {complaint.images?.length > 0 && (
               <div className="complaint-gallery">
                 {complaint.images.map(img => (
-                    <img
-                      key={img}
-                      src={`http://localhost:5000/uploads/${img}`}
-                      alt="Complaint visualization"
-                    />
+                    <img key={img} src={`http://localhost:5000/uploads/${img}`} alt="Complaint visualization" />
                 ))}
               </div>
             )}
@@ -105,7 +119,6 @@ export default function ComplaintDetails() {
             </div>
           </div>
 
-         
           <div className="complaint-sidebar-card">
             <div className="sidebar-section">
               <h3>Details</h3>
@@ -131,7 +144,6 @@ export default function ComplaintDetails() {
               </div>
             </div>
 
-            
             {showEngagement && (
               <div className="sidebar-section">
                 <h3>Engagement</h3>
@@ -142,7 +154,6 @@ export default function ComplaintDetails() {
               </div>
             )}
 
-            
             {showComments && (
               <div className="sidebar-section">
                 <h3>Comments ({complaint.comments.length})</h3>
@@ -159,9 +170,7 @@ export default function ComplaintDetails() {
             )}
           </div>
 
-         
           <div className="action-card">
-           
             {user?.role === 'admin' && complaint.status === 'received' && (
                 <div className="sidebar-section">
                     <h3>Assign to Volunteer</h3>
@@ -177,7 +186,6 @@ export default function ComplaintDetails() {
                 </div>
             )}
 
-          
             {user?.role !== 'admin' && (
               <div className="sidebar-section">
                 <h3>Your Feedback</h3>
