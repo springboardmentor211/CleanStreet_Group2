@@ -40,8 +40,8 @@ Layer -> Technology
 ## 🧩 Setup Instructions  
 
 # Clone the repository
-
-git clone -b dev https://github.com/your-username/CleanStreet.git
+0
+git clone -b dev https://github.com/springboardmentor211/CleanStreet_Group2/tree/dev
 cd CleanStreet
 
 cd backend
